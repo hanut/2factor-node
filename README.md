@@ -12,6 +12,11 @@ $ npm i 2factor --save
 ```
 
 ## Usage
+Include 2Factor in a script
+~~~~
+const TwoFactor = require('2factor')
+~~~~
+
 To send a template SMS to a single user
 ~~~~
 TwoFactor.sendTemplate('123456789', 'YOUR SENDER ID', ['VAR1','VAR2', 'VAR3']).then((response) => {
@@ -20,6 +25,7 @@ TwoFactor.sendTemplate('123456789', 'YOUR SENDER ID', ['VAR1','VAR2', 'VAR3']).t
   console.log(error)
 })
 ~~~~
+
 To send a template SMS to a single user
 ~~~~
 TwoFactor.sendTemplate(['123456789','987654321'], 'YOUR SENDER ID', ['VAR1','VAR2', 'VAR3']).then((response) => {

@@ -1,6 +1,6 @@
 {
   "name": "2factor",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Simple node library for sending transactional/otp/promotional SMS in India using the 2factor.in APIs",
   "main": "index.js",
   "directories": {
