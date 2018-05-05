@@ -1,0 +1,39 @@
+{
+  "name": "2factor",
+  "version": "1.0.0",
+  "description": "Simple node library for sending transactional/otp/promotional SMS in India using the 2factor.in APIs",
+  "main": "module.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "mocha test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hanut/2factor-node.git"
+  },
+  "keywords": [
+    "2factor.in",
+    "sms",
+    "api",
+    "send",
+    "sms",
+    "otp",
+    "via",
+    "sms",
+    "otp",
+    "otp",
+    "sms",
+    "promotional",
+    "sms",
+    "transactional",
+    "sms"
+  ],
+  "author": "Hanut Singh Gusain",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/hanut/2factor-node/issues"
+  },
+  "homepage": "https://github.com/hanut/2factor-node#readme"
+}
