@@ -1,5 +1,12 @@
 const request = require('request')
 
+/**
+ * Constructor function that takes an API key and
+ * an optional default senderid as parameters and returns
+ *
+ * @param {[type]} APIKEY   [description]
+ * @param {[type]} SENDERID [description]
+ */
 const TwoFactor = function (APIKEY, SENDERID) {
   this.baseURL = "https://2factor.in/API/V1/" + APIKEY + "/ADDON_SERVICES"
   this.defaultSID = SENDERID || "TFCTOR"

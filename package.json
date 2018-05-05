@@ -2,12 +2,12 @@
   "name": "2factor",
   "version": "1.0.0",
   "description": "Simple node library for sending transactional/otp/promotional SMS in India using the 2factor.in APIs",
-  "main": "module.js",
+  "main": "index.js",
   "directories": {
     "test": "tests"
   },
   "scripts": {
-    "test": "mocha test"
+    "test": "mocha tests"
   },
   "repository": {
     "type": "git",
@@ -39,5 +39,8 @@
   "devDependencies": {
     "chai": "^4.1.2",
     "mocha": "^5.1.1"
+  },
+  "dependencies": {
+    "request": "^2.85.0"
   }
 }

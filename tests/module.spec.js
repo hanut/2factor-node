@@ -1,6 +1,10 @@
+const APIKEY = process.env.APIKEY || ''
+if (APIKEY === '') {
+  throw new Error()
+}
 const expect = require('chai').expect
-const TwoFactor = new (require('../libs/2factor'))("e72cb6de-4f6f-11e8-a895-0200cd936042")
-const TwoFactorWrongKey = new (require('../libs/2factor'))("abc123")
+const TwoFactor = new (require('../index'))(APIKEY)
+const TwoFactorWrongKey = new (require('../index'))("abc123")
 
 describe('2Factor API module', function() {
   describe('#balance()', function() {
