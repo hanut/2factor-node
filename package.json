@@ -7,7 +7,8 @@
     "test": "tests"
   },
   "scripts": {
-    "test": "mocha tests"
+    "test": "mocha tests",
+    "test-module": "set APIKEY=<REPLACE WITH API KEY> && set TESTPHONE=<PHONE TO USE AS RECIPIENT> && mocha tests"
   },
   "repository": {
     "type": "git",
@@ -31,7 +32,7 @@
     "sms"
   ],
   "author": "Hanut Singh Gusain",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/hanut/2factor-node/issues"
   },
