@@ -89,7 +89,7 @@ TwoFactor.prototype.sendTransactional = function(phoneNumbers, message, senderId
  TwoFactor.prototype.sendTemplate = function(phoneNumbers, templateName, values, senderId) {
   return new Promise((resolve, reject) => {
     if (typeof phoneNumbers === 'undefined' || typeof templateName === 'undefined') {
-      reject(new Error('sendTemplate() expects phoneNumbers and message to be specified'))
+      reject(new Error('sendTemplate() expects phoneNumbers and template name to be specified'))
     } else {
       if(!Array.isArray(phoneNumbers)) {
         phoneNumbers = [phoneNumbers]
