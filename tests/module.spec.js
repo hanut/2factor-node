@@ -29,17 +29,6 @@ describe('2Factor API module', function() {
       expect(returnValue).is.a('promise')
     })
 
-    context('missing or invalid type parameter', function() {
-      it('should throw an error reporting invalid or missing type field', function(done) {
-        TwoFactorWrongKey.balance().then((response) => {
-          done(new Error('Failed to stop missing balance type parameter'))
-        }).catch((error) => {
-          TwoFactorWrongKey.balance('bad type value').then(response => {
-            done(new Error('Failed to stop invalid balance type value'))
-          }).catch(error => {
-            error = null
-            done()
-          })
     context('invalid type parameter', function() {
       it('should throw an error reporting invalid or missing type field', function(done) {
         TwoFactorWrongKey.balance('bad type value').then(response => {
@@ -370,9 +359,9 @@ describe('2Factor API module', function() {
       it('should validate the correct otp and return the result', function(done) {
         this.timeout(360000)
         let otp = getRandomOTP()
-        TwoFactor.sendOTP(TESTPHONE, {template: TEMPLATE, otp: 'blah'}).then((response) => {
+        TwoFactor.sendOTP(TESTPHONE, {template: TEMPLATE, otp: otp}).then((response) => {
           let interval = setInterval(() => {
-            TwoFactor.verifyOTP(response, otp).then(response => {
+            TwoFactor.verifyOTP(response, "blah").then(response => {
               clearInterval(interval)
               done(new Error('validated an invalid otp'))
             }).catch(error => {

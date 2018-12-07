@@ -1,6 +1,6 @@
 {
   "name": "2factor",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Simple node library for sending transactional/otp/promotional SMS in India using the 2factor.in APIs",
   "main": "index.js",
   "directories": {
@@ -8,7 +8,8 @@
   },
   "scripts": {
     "test": "mocha tests",
-    "test-module": "set APIKEY=<REPLACE WITH API KEY> && set TESTPHONE=<PHONE TO USE AS RECIPIENT> && mocha tests"
+    "test-module": "set APIKEY=<REPLACE WITH API KEY> && set TESTPHONE=<PHONE TO USE AS RECIPIENT> && mocha tests",
+    "coverage": "nyc mocha tests"
   },
   "repository": {
     "type": "git",
@@ -39,7 +40,8 @@
   "homepage": "https://github.com/hanut/2factor-node#readme",
   "devDependencies": {
     "chai": "^4.1.2",
-    "mocha": "^5.1.1"
+    "mocha": "^5.1.1",
+    "nyc": "^13.1.0"
   },
   "dependencies": {
     "request": "^2.88.0"
