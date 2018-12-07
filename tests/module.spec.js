@@ -14,12 +14,29 @@ describe('2Factor API module', function() {
       expect(TwoFactor.balance).is.a('function')
     })
     it('should return a promise', function() {
-      expect(TwoFactorWrongKey.balance()).is.a('promise')
+      let returnValue = TwoFactorWrongKey.balance()
+      returnValue.catch(error => error)
+      expect(returnValue).is.a('promise')
+    })
+
+    context('missing or invalid type parameter', function() {
+      it('should throw an error reporting invalid or missing type field', function(done) {
+        TwoFactorWrongKey.balance().then((response) => {
+          done(new Error('Failed to stop missing balance type parameter'))
+        }).catch((error) => {
+          TwoFactorWrongKey.balance('bad type value').then(response => {
+            done(new Error('Failed to stop invalid balance type value'))
+          }).catch(error => {
+            error = null
+            done()
+          })
+        })
+      })
     })
 
     context('Invalid API Key', function() {
       it('should convert response string to json and handle invalid apikey error', function(done) {
-        TwoFactorWrongKey.balance().then((response) => {
+        TwoFactorWrongKey.balance('SMS').then((response) => {
           if (response.Status.match(/Success/)) {
             done('2Factor API allowed invalid key')
           } else {
@@ -33,7 +50,7 @@ describe('2Factor API module', function() {
 
     context('Valid API Key', function() {
       it('should return Status as success and numeric balance in Details field', function(done) {
-        TwoFactor.balance().then((response) => {
+        TwoFactor.balance('SMS').then((response) => {
           expect(response).is.an('object')
           expect(response).has.keys(['Status', 'Details'])
           expect(response.Status).is.equal('Success')
