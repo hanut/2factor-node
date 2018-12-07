@@ -27,18 +27,49 @@ const TwoFactor = function (APIKEY, SENDERID) {
 /**
 * Method to retrieve balance for this client. It expects a type parameter which
 * is a string defining the type of balance to return.
+<<<<<<< HEAD
 * Type can be either 'SMS', 'TRANSACTIONAL_SMS' or 'PROMOTIONAL_SMS'.
+=======
+* Type can be either 'ALL', SMS', 'TRANSACTIONAL_SMS' or 'PROMOTIONAL_SMS'.
+>>>>>>> d70cbc000cc24378c2ea1f0bc98d792d0cb693db
 *
 * @param {string} type - The type of balance to return
 * @return {Promise} A promise object that resolves after the api call has completed
 */
 TwoFactor.prototype.balance = function(type) {
   return new Promise((resolve, reject) => {
-    if (!type || ['SMS', 'TRANSACTIONAL_SMS', 'PROMOTIONAL_SMS'].indexOf(type) === -1) {
-      throw new Error("Type parameter is required.")
+    if (!type) {
+      type = 'ALL'
+    }
+    if (['ALL', 'SMS', 'TRANSACTIONAL_SMS', 'PROMOTIONAL_SMS'].indexOf(type) === -1) {
+      reject(new Error("Invalid value of `type` parameter"))
+      return
     }
     let url = ''
-    if (type === 'SMS') {
+    if (type === 'ALL') {
+      let balances = {
+        sms: undefined,
+        transactional: undefined,
+        promotional: undefined
+      }
+      this.balance('SMS').then(response => {
+        balances.sms = response.Details
+        this.balance('TRANSACTIONAL_SMS').then(response => {
+          balances.transactional = response.Details
+          this.balance('PROMOTIONAL_SMS').then(response => {
+            balances.promotional = response.Details
+            resolve(balances)
+          }).catch(error => {
+            reject(error)
+          })
+        }).catch(error => {
+          reject(error)
+        })
+      }).catch(error => {
+        reject(error)
+      })
+      return
+    } else if (type === 'SMS') {
       url = `${baseURL}${this.apikey}${EP_SMS_BAL}`
     } else if (type === 'TRANSACTIONAL_SMS') {
       url = `${baseURL}${this.apikey}${EP_TSMS_BAL}`
@@ -51,7 +82,8 @@ TwoFactor.prototype.balance = function(type) {
       url: url
     }, function(err, res, body) {
       if (err) {
-        reject(err);
+        reject(err)
+        return
       }
       try {
         let parsedBody = JSON.parse(body)
@@ -62,6 +94,7 @@ TwoFactor.prototype.balance = function(type) {
     })
   })
 }
+
 
 /**
 * Send a transactional, open template SMS
@@ -92,7 +125,8 @@ TwoFactor.prototype.sendTransactional = function(phoneNumbers, message, senderId
         form: payload
       }, function(err, res, body) {
         if (err) {
-          reject(err);
+          reject(err)
+          return
         }
         try {
           let parsedBody = JSON.parse(body)
@@ -106,14 +140,14 @@ TwoFactor.prototype.sendTransactional = function(phoneNumbers, message, senderId
 }
 
 /**
- * Send a template based SMS with pre approved senderid
- * @param  {array} phoneNumbers - An array of phone numbers without country codes
- * @param  {string} templateName - Name of the template to be used
- * @param  {string} values - An array holding maximum of 5 values to be used in the template. 
- * @param  {string} [senderId] - Optional parameter to specify a different senderid for this request
- * @return {Promise} A promise object that resolves after the api call has completed
- */
- TwoFactor.prototype.sendTemplate = function(phoneNumbers, templateName, values, senderId) {
+* Send a template based SMS with pre approved senderid
+* @param  {array} phoneNumbers - An array of phone numbers without country codes
+* @param  {string} templateName - Name of the template to be used
+* @param  {string} values - An array holding maximum of 5 values to be used in the template. 
+* @param  {string} [senderId] - Optional parameter to specify a different senderid for this request
+* @return {Promise} A promise object that resolves after the api call has completed
+*/
+TwoFactor.prototype.sendTemplate = function(phoneNumbers, templateName, values, senderId) {
   return new Promise((resolve, reject) => {
     if (typeof phoneNumbers === 'undefined' || typeof templateName === 'undefined') {
       return reject(new Error('sendTemplate() expects phoneNumbers and template name to be specified'))
@@ -139,11 +173,107 @@ TwoFactor.prototype.sendTransactional = function(phoneNumbers, message, senderId
       form: payload
     }, function(err, res, body) {
       if (err) {
-        reject(err);
+        reject(err)
+        return
       }
       try {
         let parsedBody = JSON.parse(body)
         resolve(parsedBody)
+      } catch(e) {
+        reject(e)
+      }
+    })
+  })
+}
+
+/**
+* Send an OTP to a given phone number. Accepts a phone number parameter along with an
+* optional `options` parameter. Options object has the following attributes - 
+* 1. {number} otp - The otp you want to send to the phone number
+* 2. {string} template - A string containing the template name to use for sending the otp
+*
+* @param  {string} phoneNumber - An string containig a 10 digit phone number
+* @param  {object} options - An object containing configuration options for the request
+* @return {Promise} A promise object that resolves after the api call has completed
+*/
+TwoFactor.prototype.sendOTP = function (phoneNumber, options) {
+  return new Promise((resolve, reject) => {
+    if (!phoneNumber) {
+      reject(new Error('invalid or missing phoneNumber field'))
+      return
+    }
+    if (phoneNumber.length !== 10) {
+      reject(new Error('phone number must be exactly 10 digits'))
+      return
+    }
+    let url = ''
+    if (!options || (!options.otp && !options.template)) {
+      // No otp or template specified
+      url = `${baseURL}${this.apikey}${EP_SMS}${phoneNumber}/AUTOGEN`
+    } else  if (options.template && !options.otp) {
+      // Custom template, No otp specified
+      url = `${baseURL}${this.apikey}${EP_SMS}${phoneNumber}/AUTOGEN/${options.template}`
+    } else if (options.otp && !options.template) {
+      // Custom otp, No template specified
+      url = `${baseURL}${this.apikey}${EP_SMS}${phoneNumber}/${options.otp}`
+    } else {
+      // Custom otp and template
+      url = `${baseURL}${this.apikey}${EP_SMS}${phoneNumber}/${options.otp}/${options.template}`
+    }
+    let req = request.post({
+      url: url
+    }, function(err, res, body) {
+      if (err) {
+        reject(err)
+        return
+      }
+      try {
+        let parsedBody = JSON.parse(body)
+        if (parsedBody.Status === 'Error') {
+          reject(parsedBody.Details)
+        } else {
+          resolve(parsedBody.Details)
+        }
+      } catch(e) {
+        reject(e)
+      }
+    })
+  })
+}
+
+/**
+* Verify an OTP sent to a given phone number
+*
+* @param  {string} sessionId - A string containig the session id returned while sending the otp
+* @param  {object} otp - A string containing the otp code to verify 
+* @return {Promise} A promise object that resolves after the api call has completed
+*/
+TwoFactor.prototype.verifyOTP = function (sessionId, otp) {
+  return new Promise((resolve, reject) => {
+    if (!sessionId || sessionId === '') {
+      reject(new Error('invalid or missing sessionId parameter'))
+      return
+    }
+    if (!otp || otp.length < 4 || otp.length > 6) {
+      reject(new Error('invalid or missing otp parameter'))
+      return
+    }
+    let url = `${baseURL}${this.apikey}/SMS/VERIFY/${sessionId}/${otp}`
+    console.log(url)
+    let req = request.post({
+      url: url
+    }, function(err, res, body) {
+      if (err) {
+        reject(err)
+        return
+      }
+      try {
+        let parsedBody = JSON.parse(body)
+        if (parsedBody.Status === 'Error') {
+          reject(parsedBody.Details)
+        } else {
+          resolve(parsedBody.Details)
+        }
       } catch(e) {
         reject(e)
       }
