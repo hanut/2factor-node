@@ -12,10 +12,21 @@ $ npm i 2factor --save
 ```
 
 ## Usage
-Include 2Factor in a script
+The module exports a constructor that returns new TwoFactor instances.
+The constructor expects the `api key` to be passed to it.  
 ~~~~
-const TwoFactor = require('2factor')
+const TwoFactor = new (require('2factor'))(<your api key>)
 ~~~~
+**Note** - You shouldn't store your API key in your code or in text files you will commit to 
+your repositories. Ideally, you want to use environment variables as given below - 
+~~~~
+let APIKEY = process.env.my_api_key || ''
+if (APIKEY === '') {
+  throw new Error('Missing 2Factor api key in environment')
+}
+const TwoFactor = new(require('2factor'))(APIKEY)
+~~~~
+
 
 ### To get your balance - 
 The `balance()` method takes a single string parameter for the type of balance you want to retrieve.
