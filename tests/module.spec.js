@@ -1,6 +1,12 @@
 const APIKEY = process.env.APIKEY || ''
 const TESTPHONE = process.env.TESTPHONE || ''
 const TEMPLATE = process.env.TEMPLATE || ''
+const SENDERID = process.env.SENDERID || 'TFACTOR'
+console.log("API KEY:", APIKEY)
+console.log("TESTPHONE:", TESTPHONE)
+console.log("TEMPLATE:", TEMPLATE)
+console.log("TEMPLATE:", TEMPLATE)
+
 
 let otpSessionId = undefined 
 
@@ -153,7 +159,7 @@ describe('2Factor API module', function() {
 
     context('Valid API Key', function() {
       it('should return Status as success and status in Details field', function(done) {
-        TwoFactor.sendTransactional(TESTPHONE, 'test').then((response) => {
+        TwoFactor.sendTransactional(TESTPHONE, "hi, this is a test message", SENDERID).then((response) => {
           expect(response).is.an('object')
           expect(response).has.keys(['Status', 'Details'])
           done()
@@ -184,7 +190,7 @@ describe('2Factor API module', function() {
 
     context('Invalid API Key', function() {
       it('should convert response string to json and handle invalid apikey error', function(done) {
-        TwoFactorWrongKey.sendTemplate(TESTPHONE, 'testing').then((response) => {
+        TwoFactorWrongKey.sendTemplate(TESTPHONE, TEMPLATE).then((response) => {
           if (response.Status.match(/Success/)) {
             done('2Factor API allowed invalid key')
           } else {
@@ -198,7 +204,7 @@ describe('2Factor API module', function() {
 
     context('Valid API Key', function() {
       it('should return Status as success and status in Details field', function(done) {
-        TwoFactor.sendTemplate(TESTPHONE, 'test', ['Sweety','https://webclient.patchus.in/regenerate/test']).then((response) => {
+        TwoFactor.sendTemplate(TESTPHONE, TEMPLATE, ['Sweety','https://webclient.patchus.in/regenerate/test']).then((response) => {
           expect(response).is.an('object')
           expect(response).has.keys(['Status', 'Details'])
           done()

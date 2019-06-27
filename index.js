@@ -27,12 +27,7 @@ const TwoFactor = function (APIKEY, SENDERID) {
 /**
 * Method to retrieve balance for this client. It expects a type parameter which
 * is a string defining the type of balance to return.
-<<<<<<< HEAD
-* Type can be either 'SMS', 'TRANSACTIONAL_SMS' or 'PROMOTIONAL_SMS'.
-=======
-* Type can be either 'ALL', SMS', 'TRANSACTIONAL_SMS' or 'PROMOTIONAL_SMS'.
->>>>>>> d70cbc000cc24378c2ea1f0bc98d792d0cb693db
-*
+* Type can be either 'ALL', SMS', 'TRANSACTIONAL_SMS' or 'PROMOTIONAL_SMS'.*
 * @param {string} type - The type of balance to return
 * @return {Promise} A promise object that resolves after the api call has completed
 */
@@ -52,22 +47,16 @@ TwoFactor.prototype.balance = function(type) {
         transactional: undefined,
         promotional: undefined
       }
-      this.balance('SMS').then(response => {
-        balances.sms = response.Details
-        this.balance('TRANSACTIONAL_SMS').then(response => {
-          balances.transactional = response.Details
-          this.balance('PROMOTIONAL_SMS').then(response => {
-            balances.promotional = response.Details
-            resolve(balances)
-          }).catch(error => {
-            reject(error)
-          })
-        }).catch(error => {
-          reject(error)
-        })
-      }).catch(error => {
-        reject(error)
-      })
+      let promises = []
+      promises.push(this.balance('SMS'))
+      promises.push(this.balance('TRANSACTIONAL_SMS'))
+      promises.push(this.balance('PROMOTIONAL_SMS'))
+      Promise.all(promises).then(results => {
+        balances.sms = results[0].Details
+        balances.transactional = results[1].Details
+        balances.promotional = results[2].Details
+        resolve(balances)
+      }).catch(reject)
       return
     } else if (type === 'SMS') {
       url = `${baseURL}${this.apikey}${EP_SMS_BAL}`
