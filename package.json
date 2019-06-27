@@ -7,9 +7,8 @@
     "test": "tests"
   },
   "scripts": {
-    "test": "mocha tests",
-    "test-module": "set APIKEY=<REPLACE WITH API KEY> && set TESTPHONE=<PHONE TO USE AS RECIPIENT> && mocha tests",
-    "coverage": "nyc mocha tests"
+    "test": "nyc mocha --exit",
+    "coverage": "nyc report --reporter=text-lcov | npx coveralls"
   },
   "repository": {
     "type": "git",
@@ -41,7 +40,8 @@
   "devDependencies": {
     "chai": "^4.1.2",
     "mocha": "^5.1.1",
-    "nyc": "^13.1.0"
+    "nyc": "^13.1.0",
+    "coveralls": "^3.0.3"
   },
   "dependencies": {
     "request": "^2.88.0"

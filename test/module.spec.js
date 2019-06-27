@@ -2,11 +2,6 @@ const APIKEY = process.env.APIKEY || ''
 const TESTPHONE = process.env.TESTPHONE || ''
 const TEMPLATE = process.env.TEMPLATE || ''
 const SENDERID = process.env.SENDERID || 'TFACTOR'
-console.log("API KEY:", APIKEY)
-console.log("TESTPHONE:", TESTPHONE)
-console.log("TEMPLATE:", TEMPLATE)
-console.log("TEMPLATE:", TEMPLATE)
-
 
 let otpSessionId = undefined 
 
@@ -285,15 +280,15 @@ describe('2Factor API module', function() {
       //   })
       // })
 
-      describe('Custom otp and template', function() {
-        it('should return Status as success and status in Details field', function(done) {
-          TwoFactor.sendOTP(TESTPHONE, {template: TEMPLATE, otp: getRandomOTP()}).then((response) => {
-            done()
-          }, (error) => {
-            done(new Error(error))
-          })
-        })
-      })
+      // describe('Custom otp and template', function() {
+      //   it('should return Status as success and status in Details field', function(done) {
+      //     TwoFactor.sendOTP(TESTPHONE, {template: TEMPLATE, otp: getRandomOTP()}).then((response) => {
+      //       done()
+      //     }, (error) => {
+      //       done(new Error(error))
+      //     })
+      //   })
+      // })
     })
   })
 
@@ -345,41 +340,41 @@ describe('2Factor API module', function() {
     })
 
     context('Valid API Key', function() {
-      it('should validate the correct otp and return the result', function(done) {
-        this.timeout(360000)
-        let otp = getRandomOTP()
-        TwoFactor.sendOTP(TESTPHONE, {template: TEMPLATE, otp: otp}).then((response) => {
-          let interval = setInterval(() => {
-            TwoFactor.verifyOTP(response, otp).then(response => {
-              clearInterval(interval)
-              done()
-            }).catch(error => {
-              done(new Error(error))
-            })
-          }, 3000)
-        }).catch(error => {
-          done(new Error(error))
-        })
-      })
+      // it('should validate the correct otp and return the result', function(done) {
+      //   this.timeout(360000)
+      //   let otp = getRandomOTP()
+      //   TwoFactor.sendOTP(TESTPHONE, {template: TEMPLATE, otp: otp}).then((response) => {
+      //     let interval = setInterval(() => {
+      //       TwoFactor.verifyOTP(response, otp).then(response => {
+      //         clearInterval(interval)
+      //         done()
+      //       }).catch(error => {
+      //         done(new Error(error))
+      //       })
+      //     }, 3000)
+      //   }).catch(error => {
+      //     done(new Error(error))
+      //   })
+      // })
 
-      it('should validate the correct otp and return the result', function(done) {
-        this.timeout(360000)
-        let otp = getRandomOTP()
-        TwoFactor.sendOTP(TESTPHONE, {template: TEMPLATE, otp: otp}).then((response) => {
-          let interval = setInterval(() => {
-            TwoFactor.verifyOTP(response, "blah").then(response => {
-              clearInterval(interval)
-              done(new Error('validated an invalid otp'))
-            }).catch(error => {
-              clearInterval(interval)
-              console.log(error)
-              done()
-            })
-          }, 3000)
-        }).catch(error => {
-          done(new Error(error))
-        })
-      })
+      // it('should validate the correct otp and return the result', function(done) {
+      //   this.timeout(360000)
+      //   let otp = getRandomOTP()
+      //   TwoFactor.sendOTP(TESTPHONE, {template: TEMPLATE, otp: otp}).then((response) => {
+      //     let interval = setInterval(() => {
+      //       TwoFactor.verifyOTP(response, "blah").then(response => {
+      //         clearInterval(interval)
+      //         done(new Error('validated an invalid otp'))
+      //       }).catch(error => {
+      //         clearInterval(interval)
+      //         console.log(error)
+      //         done()
+      //       })
+      //     }, 3000)
+      //   }).catch(error => {
+      //     done(new Error(error))
+      //   })
+      // })
 
     })
 
