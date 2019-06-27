@@ -1,6 +1,7 @@
 # 2factor-node
 NodeJS module for using the 2factor.in APIs for sending transactional and OTP sms in india
-
+[![Build Status](https://travis-ci.org/hanut/2factor-node.svg?branch=master)](https://travis-ci.org/hanut/2factor-node)
+[![Coverage Status](https://coveralls.io/repos/github/hanut/2factor-node/badge.svg?branch=master)](https://coveralls.io/github/hanut/2factor-node?branch=master)
 ## Installation
 To install the library use
 ```sh
